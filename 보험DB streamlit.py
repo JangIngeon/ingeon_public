@@ -9,7 +9,7 @@ def get_connection():
         host="127.0.0.1",  # MySQL 서버 주소
         user="root",       # 사용자 계정
         password="1234",   # 비밀번호
-        db="InsuranceDB",  # 데이터베이스 이름
+        db="Insu",  # 데이터베이스 이름
         charset="utf8"
     )
 
