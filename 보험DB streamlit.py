@@ -1,29 +1,23 @@
-import streamlit as st
 import pymysql
 import pandas as pd
+import duckdb # pip install duckdb
+dbConn = pymysql.connect(user='root', passwd='1234', host='127.0.0.1', db='Insu', charset='utf8')
+cursor = dbConn.cursor(pymysql.cursors.DictCursor)
 
-# MySQL 연결 설정
-def get_connection():
-    return pymysql.connect(
-        user='root',       # MySQL 사용자명
-        passwd='1234',     # MySQL 비밀번호
-        host='127.0.0.1',  # 로컬호스트
-        db='Insu',         # 데이터베이스 이름
-        charset='utf8'     # 문자셋
-    )
-
-# MySQL 쿼리 실행 및 결과를 DataFrame으로 반환
+# MySQL에 쿼리하고 결과를 dataframe으로 반환
 def sqldf(sql):
-    try:
-        conn = get_connection()
-        cursor = conn.cursor(pymysql.cursors.DictCursor)
-        cursor.execute(sql)
-        result = cursor.fetchall()
-        conn.close()
-        return pd.DataFrame(result)
-    except Exception as e:
-        st.error(f"SQL 실행 오류: {e}")
-        return pd.DataFrame()
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    return pd.DataFrame(result)
+
+# MySQL에 쿼리하고 결과를 딕셔너리로 반환
+def sqldic(sql):
+    cursor.execute(sql)
+    return cursor.fetchall()
+
+# 데이터프레임에 쿼리한 결과를 데이터프레임으로 반환
+def dfsql(query):
+   return duckdb.query(query).df()
 
 # Streamlit 애플리케이션
 st.title("보험 데이터베이스 분석 도구")
