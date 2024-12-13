@@ -1,38 +1,45 @@
-# 필수 라이브러리 임포트
+import streamlit as st
 import pymysql
 import pandas as pd
-import duckdb  # pip install duckdb
+import plotly.express as px
 
-# MySQL 연결 설정
-dbConn = pymysql.connect(
-    user='root',           # 사용자 이름
-    passwd='1234',         # 비밀번호
-    host='127.0.0.1',      # MySQL 서버 주소
-    db='Insu',             # 데이터베이스 이름
-    charset='utf8'         # 문자 인코딩
-)
-cursor = dbConn.cursor(pymysql.cursors.DictCursor)
+# MySQL 연결 함수
+def get_connection():
+    return pymysql.connect(
+        host="127.0.0.1",  # MySQL 서버 주소
+        user="root",       # 사용자 계정
+        password="1234",   # 비밀번호
+        db="InsuranceDB",  # 데이터베이스 이름
+        charset="utf8"
+    )
 
-# MySQL에 쿼리하고 결과를 DataFrame으로 반환
-def sqldf(sql):
-    """
-    MySQL에 쿼리를 실행하고 결과를 pandas DataFrame으로 반환합니다.
-    """
-    cursor.execute(sql)
-    result = cursor.fetchall()
-    return pd.DataFrame(result)
+# SQL 실행 함수
+def fetch_data(sql):
+    conn = get_connection()
+    df = pd.read_sql(sql, conn)
+    conn.close()
+    return df
 
-# MySQL에 쿼리하고 결과를 딕셔너리로 반환
-def sqldic(sql):
-    """
-    MySQL에 쿼리를 실행하고 결과를 딕셔너리로 반환합니다.
-    """
-    cursor.execute(sql)
-    return cursor.fetchall()
+# Streamlit 앱
+st.title("보험 DB 조회 및 분석")
 
-# DuckDB로 쿼리 실행 후 DataFrame 반환
-def dfsql(query):
-    """
-    DuckDB를 사용해 쿼리를 실행하고 결과를 pandas DataFrame으로 반환합니다.
-    """
-    return duckdb.query(query).df()
+# SQL 쿼리 입력
+query = st.text_area("SQL 쿼리를 입력하세요", "SELECT * FROM customers LIMIT 10")
+
+# 쿼리 실행 버튼
+if st.button("쿼리 실행"):
+    try:
+        # 데이터 조회
+        data = fetch_data(query)
+        st.write("데이터 조회 성공!")
+        st.dataframe(data)
+
+        # 데이터 분석 예제
+        if 'gender' in data.columns:
+            st.subheader("성별 비율 분석")
+            gender_count = data['gender'].value_counts()
+            fig = px.pie(values=gender_count, names=gender_count.index, title="성별 비율")
+            st.plotly_chart(fig)
+    except Exception as e:
+        st.error(f"오류 발생: {e}")
+
