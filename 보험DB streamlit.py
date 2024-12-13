@@ -1,45 +1,61 @@
 import streamlit as st
-import pymysql
 import pandas as pd
-import plotly.express as px
+import pymysql
+import duckdb
 
-# MySQL 연결 함수
+# MySQL 연결 설정
 def get_connection():
     return pymysql.connect(
-        host="127.0.0.1",  # MySQL 서버 주소
-        user="root",       # 사용자 계정
-        password="1234",   # 비밀번호
-        db="Insu",  # 데이터베이스 이름
-        charset="utf8"
+        user='root',
+        passwd='1234',
+        host='127.0.0.1',
+        db='Insu',
+        charset='utf8'
     )
 
-# SQL 실행 함수
-def fetch_data(sql):
-    conn = get_connection()
-    df = pd.read_sql(sql, conn)
-    conn.close()
-    return df
+# MySQL에 쿼리하고 결과를 pandas DataFrame으로 반환
+def sqldf(sql):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        conn.close()
+        return pd.DataFrame(result)
+    except Exception as e:
+        st.error(f"SQL 실행 오류: {e}")
+        return pd.DataFrame()
 
-# Streamlit 앱
+# Streamlit 앱 구성
 st.title("보험 DB 조회 및 분석")
 
-# SQL 쿼리 입력
+# 사용자 입력 - SQL 쿼리 입력
 query = st.text_area("SQL 쿼리를 입력하세요", "SELECT * FROM customers LIMIT 10")
 
-# 쿼리 실행 버튼
+# SQL 실행 버튼
 if st.button("쿼리 실행"):
-    try:
-        # 데이터 조회
-        data = fetch_data(query)
-        st.write("데이터 조회 성공!")
-        st.dataframe(data)
+    if query.strip():
+        try:
+            # SQL 실행 및 결과 출력
+            data = sqldf(query)
+            if not data.empty:
+                st.success("데이터 조회 성공!")
+                st.dataframe(data)  # DataFrame을 테이블로 출력
+            else:
+                st.warning("결과가 없습니다.")
+        except Exception as e:
+            st.error(f"오류 발생: {e}")
+    else:
+        st.warning("SQL 쿼리를 입력하세요.")
 
-        # 데이터 분석 예제
-        if 'gender' in data.columns:
-            st.subheader("성별 비율 분석")
-            gender_count = data['gender'].value_counts()
-            fig = px.pie(values=gender_count, names=gender_count.index, title="성별 비율")
-            st.plotly_chart(fig)
+# 데이터 분석 - 예제: 고객 수 통계
+st.header("고객 통계 분석")
+if st.button("고객 수 분석 실행"):
+    try:
+        stats_query = "SELECT COUNT(*) AS customer_count FROM customers"
+        stats_data = sqldf(stats_query)
+        st.write("고객 수:", stats_data.iloc[0]['customer_count'])
     except Exception as e:
-        st.error(f"오류 발생: {e}")
+        st.error(f"분석 중 오류 발생: {e}")
+
 
