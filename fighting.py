@@ -9,9 +9,9 @@ if st.button("확인"):
         # 성을 제외한 이름 부분 추출
         first_name = name[1:]  # 첫 글자를 제외한 나머지
         
-        # 밝고 희망찬 폰트 스타일로 출력
+        # 파란색 글씨로 출력
         st.markdown(f"""
-        <h1 style='color: #FF6F61; font-family: "Comic Sans MS", cursive, sans-serif; font-size: 60px; text-align: center;'> 
+        <h1 style='color: #1E90FF; font-family: "Comic Sans MS", cursive, sans-serif; font-size: 60px; text-align: center;'> 
         {first_name}아 힘내!</h1>
         """, unsafe_allow_html=True)
     else:
