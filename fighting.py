@@ -16,6 +16,6 @@ if st.button("확인"):
         """, unsafe_allow_html=True)
         
         # 이미지 출력
-        st.image("https://cdn.cashfeed.co.kr/attachments/03a1ab8e70.jpg", use_column_width=True)
+        st.image("https://cdn.cashfeed.co.kr/attachments/03a1ab8e70.jpg", use_container_width=True)
     else:
         st.write("이름을 입력해주세요.")
