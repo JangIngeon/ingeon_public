@@ -1,0 +1,13 @@
+import streamlit as st
+
+# 이름 입력 받기
+name = st.text_input("이름을 입력하세요:")
+
+# 확인 버튼
+if st.button("확인"):
+    if name:
+        # 성을 제외한 이름 부분 추출
+        first_name = name[1:]  # 첫 글자를 제외한 나머지
+        st.write(f"{first_name}아 힘내!")
+    else:
+        st.write("이름을 입력해주세요.")
