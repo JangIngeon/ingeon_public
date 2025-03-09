@@ -4,12 +4,12 @@ import streamlit as st
 st.set_page_config(page_title="타이니닷 로스터리 카페", page_icon="☕", layout="wide")
 
 # 로고 이미지 표시
-st.image(r"https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20240703_21%2F1719934078338XAW2P_JPEG%2FKakaoTalk_20240703_001904553_29.jpg", width=200)
+st.image(r"https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20240703_21%2F1719934078338XAW2P_JPEG%2FKakaoTalk_20240703_001904553_29.jpg", width=300)
 
 # 제목 및 소개
 st.title("타이니닷 로스터리 카페")
 st.write("🌱 신선한 원두를 직접 로스팅하는 **타이니닷**에 오신 것을 환영합니다!")
-st.write("인천 미추홀구의 숨겨진 보석
+st.write('''인천 미추홀구의 숨겨진 보석
 타이니닷(Tiny dot)
 
 주안동에 자리 잡은 특별한 카페 타이니닷(Tiny dot)은
@@ -68,7 +68,7 @@ st.write("인천 미추홀구의 숨겨진 보석
 오늘, 타이니닷에서 커피 한 잔의 여유와 디저트의 달콤함을 만끽해 보세요.
 타이니닷에서의 모든 경험은 잊지 못할 특별한 느낌을 선사할 것입니다.
 언제든지 편안하게 들러주세요^^
-여러분의 방문을 기다리고 있겠습니다~!")
+여러분의 방문을 기다리고 있겠습니다~!''')
 
 # 네비게이션
 menu = st.sidebar.radio("메뉴", ["홈", "원두 구매"])
@@ -87,16 +87,27 @@ elif menu == "원두 구매":
     st.header("🛒 원두 구매")
     st.write("아래에서 원하시는 원두를 선택하고 수량을 입력하세요.")
 
-    # 원두 옵션
-    beans = ["에티오피아 예가체프", "에티오피아 코케허니", "콜롬비아 수프리모", "인도네시아 만델링", "케냐 AA", "과테말라 안티구아"]
+    # 원두 옵션 및 가격
+    bean_prices = {
+        "에티오피아 예가체프": 20000,
+        "에티오피아 코케허니": 22000,
+        "콜롬비아 수프리모": 18000,
+        "인도네시아 만델링": 25000,
+        "케냐 AA": 23000,
+        "과테말라 안티구아": 21000
+    }
+    
+    beans = list(bean_prices.keys())
     choice = st.selectbox("원두 선택", beans)
+    st.write(f"💰 가격: **{bean_prices[choice]}원/kg**")
 
     # 수량 선택
     quantity = st.number_input("구매할 수량(kg)", min_value=0.1, max_value=10.0, step=0.1)
+    total_price = bean_prices[choice] * quantity
 
     # 주문 버튼
     if st.button("🛍️ 주문하기"):
         if quantity > 0:
-            st.success(f"✅ {choice} {quantity}kg 주문이 완료되었습니다!")
+            st.success(f"✅ {choice} {quantity}kg 주문이 완료되었습니다! 총 금액: {total_price:,.0f}원")
         else:
             st.warning("❗ 수량을 0보다 크게 설정하세요.")
