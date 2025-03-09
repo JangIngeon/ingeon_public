@@ -3,8 +3,12 @@ import streamlit as st
 # 페이지 설정
 st.set_page_config(page_title="타이니닷 로스터리 카페", page_icon="☕", layout="wide")
 
+# 네비게이션 메뉴
+menu = st.sidebar.radio("메뉴", ["홈", "원두 구매"])
+
 # 로고 이미지 표시
 st.image(r"https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20240703_21%2F1719934078338XAW2P_JPEG%2FKakaoTalk_20240703_001904553_29.jpg", width=300)
+
 if menu == "홈":
     st.header("☕ 타이니닷 소개")
     st.write(
@@ -21,12 +25,13 @@ elif menu == "원두 구매":
 
     # 원두 옵션 및 가격
     bean_prices = {
-        "에티오피아 예가체프": 20000,
-        "에티오피아 코케허니": 22000,
-        "콜롬비아 수프리모": 18000,
-        "인도네시아 만델링": 25000,
-        "케냐 AA": 23000,
-        "과테말라 안티구아": 21000
+        "아바야 게이샤": 15000
+        "에티오피아 예가체프": 12000,
+        "에티오피아 코케허니": 12000,
+        "콜롬비아 수프리모": 12000,
+        "인도네시아 만델링": 12000,
+        "케냐 AA": 12000,
+        "과테말라 안티구아": 12000
     }
     
     beans = list(bean_prices.keys())
@@ -43,7 +48,6 @@ elif menu == "원두 구매":
             st.success(f"✅ {choice} {quantity}kg 주문이 완료되었습니다! 총 금액: {total_price:,.0f}원")
         else:
             st.warning("❗ 수량을 0보다 크게 설정하세요.")
-
 
 # 제목 및 소개
 st.title("타이니닷 로스터리 카페")
@@ -96,9 +100,5 @@ st.write('''인천 미추홀구의 숨겨진 보석
 첨가물을 배제하고, 자연의 맛을 살린 디저트는 아이부터 어른까지 누구나 즐길 수 있습니다.
 
 3. 맞춤형 공간 활용
-타이니닷은 단체 모임, 친구와의 수다, 혹은 혼자만의 여유에도 최적화된 공간을 제공합니다.''')
-
-
-# 네비게이션
-menu = st.sidebar.radio("메뉴", ["홈", "원두 구매"])
-
+타이니닷은 단체 모임, 친구와의 수다, 혹은 혼자만의 여유에도 최적화된 공간을 제공합니다.
+''')
