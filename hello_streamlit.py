@@ -91,16 +91,19 @@ elif menu == "원두 구매":
     choice = st.selectbox("원두 선택", beans)
     selected_bean = bean_prices[choice]
     
-    st.write(f"💰 가격 (200g): **{selected_bean['200g']}원**, (500g): **{selected_bean['500g']}원**, (1kg): **{selected_bean['1kg']}원**")
+    st.write(f"💰 가격")
+    st.write(f" 200g: **{selected_bean['200g']}원**")
+    st.write(f" 500g: **{selected_bean['500g']}원**")
+    st.write(f" 1kg: **{selected_bean['1kg']}원**")
 
-    # 수량 선택
+    # 크기 선택
     size_choice = st.selectbox("선택할 크기", ["200g", "500g", "1kg"])
-    quantity = st.number_input(f"{size_choice} 수량", min_value=0.1, max_value=10.0, step=0.1)
+    quantity = st.number_input(f"{size_choice} 수량", min_value=1, max_value=10, step=1)
     total_price = selected_bean[size_choice] * quantity
 
     # 주문 버튼
     if st.button("🛍️ 주문하기"):
         if quantity > 0:
-            st.success(f"✅ {choice} {size_choice} {quantity}kg 주문이 완료되었습니다! 총 금액: {total_price:,.0f}원")
+            st.success(f"✅ {choice} {size_choice} {quantity}개 주문이 완료되었습니다! 총 금액: {total_price:,.0f}원")
         else:
-            st.warning("❗ 수량을 0보다 크게 설정하세요.")
+            st.warning("❗ 수량을 1개 이상 설정하세요.")
