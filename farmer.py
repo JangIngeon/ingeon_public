@@ -31,9 +31,9 @@ def display_products(low_quality_df):
         st.write(f"- {row['품목명']} ({row['등급']}): {row['가격']}원 (산지: {row['산지']})")
 
 # 데이터 로드 (이미 로드된 trend, rating, farmer 사용)
-trend = pd.read_csv('trend.csv')
-rating = pd.read_csv('rating.csv')
-farmer = pd.read_csv('farmer.csv')
+trend = pd.read_csv(r'C:\Users\wkddl\Desktop\인건 대외활동\공모전\농림축산식품부\Data\부류(전체)전지역에 대한 결과입니다..csv')
+rating = pd.read_csv(r'C:\Users\wkddl\Desktop\인건 대외활동\공모전\농림축산식품부\Data\auction_202504.csv')
+farmer = pd.read_csv(r'C:\Users\wkddl\Desktop\인건 대외활동\공모전\농림축산식품부\Data\한국농수산식품유통공사_농산물 생산 농가별 주요 상품 정보_20240724.csv')
 
 # 실행
 st.subheader('🔥 상위 소비자 수요 품목 선정')
