@@ -4,7 +4,7 @@ from datetime import date
 
 st.set_page_config(page_title="연애일지 💕", page_icon="💌", layout="centered")
 
-st.title("인건이가 만든 커플 날짜계산기❤️")
+st.title("커플 날짜계산기❤️")
 
 # 입력 칸
 your_name = st.text_input("본인 이름")
