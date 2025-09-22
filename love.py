@@ -8,7 +8,7 @@ st.title("커플 날짜계산기❤️")
 
 # 입력 칸
 your_name = st.text_input("본인 이름")
-partner_name = st.text_input("남자친구 이름")
+partner_name = st.text_input("애인 이름")
 start_date = st.date_input("사귀기로 한 날짜", value=date.today())
 
 # 버튼
