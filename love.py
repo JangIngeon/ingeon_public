@@ -4,11 +4,11 @@ from datetime import date
 
 st.set_page_config(page_title="연애일지 💕", page_icon="💌", layout="centered")
 
-st.title("연애 기록 ❤️")
+st.title("❤️")
 
 # 입력 칸
-your_name = st.text_input("본인 이름")
-partner_name = st.text_input("남자친구 이름")
+your_name = st.text_input("본인의 이름")
+partner_name = st.text_input("연인의 이름")
 start_date = st.date_input("사귀기로 한 날짜", value=date.today())
 
 # 버튼
