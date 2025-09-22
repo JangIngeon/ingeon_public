@@ -53,9 +53,9 @@ if st.button("확인하기 💌"):
         st.markdown(
             f"""
             <div style='text-align:center; margin-top:30px'>
-                <h1>{your_name} ♥ {partner_name}</h1>
+                <h1>{your_name} 💖 {partner_name}</h1>
                 <div class="bubble">
-                    사귄지 <b>{days}일째</b>에요~ 💖<br>
+                    사귄지 <b>{days}일째</b>에요~ <br>
                     {short_name}아 사랑해 💕
                 </div>
             </div>
