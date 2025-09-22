@@ -56,7 +56,7 @@ if st.button("확인하기 💌"):
                 <h1>{your_name} 💖 {partner_name}</h1>
                 <div class="bubble">
                     사귄지 <b>{days}일째</b>에요~ <br>
-                    {short_name}아 사랑해 💕
+                    예쁜 사랑하세요 💕
                 </div>
             </div>
             """,
