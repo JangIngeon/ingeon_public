@@ -28,7 +28,7 @@ else:
     st.markdown("<div style='text-align:center; padding:18px'>", unsafe_allow_html=True)
     st.markdown(f"<h2 style='margin:6px'>{your_name} ♥ {partner_name}</h2>", unsafe_allow_html=True)
     st.markdown(f"<h1 style='margin:6px; font-size:46px'>{delta_days}일째에요~</h1>", unsafe_allow_html=True)
-    st.markdown(f"<p style='margin-top:12px; font-size:28px'>({partner_name})아 사랑해~ 💕</p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='margin-top:12px; font-size:28px'>({partner_name}) 사랑해~ 💕</p>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
     # 메시지 텍스트 생성 및 다운로드 버튼
