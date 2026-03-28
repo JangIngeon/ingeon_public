@@ -4,5 +4,3 @@ numpy
 statsmodels
 requests
 urllib3
-pyOpenSSL
-cryptography
