@@ -73,7 +73,7 @@ tab1, tab2 = st.tabs(["⚡ 간편 소셜 시작", "📧 NextWave 계정"])
 with tab1:
     st.write("")
     st.button("🚀 Google로 3초 만에 시작", key="google_btn")
-    st.button("💬 Kakao로 간편 가입하기", key="kakao_btn")
+    st.button("💬 Kakao로 3초 만에 시작", key="kakao_btn")
     st.button("🟢 Naver로 3초 만에 시작", key="naver_btn")
     st.caption("클릭 한 번으로 가입 절차 없이 바로 시작할 수 있습니다.")
 
