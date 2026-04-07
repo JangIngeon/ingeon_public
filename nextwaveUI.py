@@ -61,7 +61,7 @@ if 'app_step' not in st.session_state:
 if st.session_state.app_step == 1:
     st.markdown('<div class="app-header">NextWave</div>', unsafe_allow_html=True)
     st.title("일과 삶의 파도를 넘는 스마트한 방법")
-    st.write("이미 **초기 직장인 가입자의 51.3%**가 경험하고 있습니다.")
+    st.write("이미 초기 직장인 가입자의 51.3%가 경험하고 있습니다.")
     st.info("💡 **NextWave 핵심 가치**\n- 직장인 평균 업무 시간 20% 단축 증명\n- AI 일정 관리 및 실시간 팀 협업")
     
     if st.button("내게 맞는 요금제 확인하기 ➔"):
