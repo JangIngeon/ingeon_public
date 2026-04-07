@@ -1,169 +1,141 @@
 import streamlit as st
 
-# 페이지 기본 설정 및 디자인
-st.set_page_config(page_title="NextWave | 일과 삶의 파도를 넘는 스마트한 방법", layout="wide")
+# 모바일 앱 스타일 설정
+st.set_page_config(page_title="NextWave App", layout="centered")
 
 st.markdown("""
     <style>
-    /* 전체 배경 및 폰트 설정 */
-    .main { background-color: #ffffff; font-family: 'Pretendard', sans-serif; }
+    /* 전체 배경색 및 폰트 */
+    .stApp { background-color: #ffffff; }
     
-    /* 히어로 섹션 */
-    .hero {
+    /* 상단 앱 바 스타일 */
+    .app-bar {
         text-align: center;
-        padding: 80px 20px;
-        background: linear-gradient(135deg, #0056b3 0%, #003d80 100%);
-        color: white;
-        border-radius: 0 0 50px 50px;
-        margin-bottom: 50px;
-    }
-    
-    /* 요금제 카드 공통 스타일 */
-    .pricing-container {
-        display: flex;
-        justify-content: center;
-        gap: 25px;
-        padding: 20px;
-        flex-wrap: wrap;
-    }
-    .price-card {
-        background: white;
-        padding: 40px;
-        border-radius: 20px;
-        border: 1px solid #e9ecef;
-        width: 300px;
-        text-align: center;
-        transition: transform 0.3s ease;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    }
-    .price-card:hover { transform: translateY(-10px); border-color: #0056b3; }
-    
-    /* 직장인 제휴 플랜 강조 스타일 */
-    .featured {
-        border: 3px solid #0056b3;
-        position: relative;
-    }
-    .badge {
-        position: absolute;
-        top: -15px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #0056b3;
-        color: white;
-        padding: 5px 15px;
-        border-radius: 20px;
-        font-size: 0.8em;
-        font-weight: bold;
-    }
-    
-    .price-title { font-size: 1.5em; font-weight: bold; margin-bottom: 10px; color: #333; }
-    .price-val { font-size: 2.2em; font-weight: 800; color: #0056b3; margin-bottom: 20px; }
-    .price-features { list-style: none; padding: 0; margin-bottom: 30px; text-align: left; }
-    .price-features li { margin-bottom: 12px; color: #666; font-size: 0.95em; }
-    .price-features li::before { content: "✓ "; color: #0056b3; font-weight: bold; }
-    
-    /* 블록형 프로그레스 바 */
-    .progress-container { display: flex; justify-content: center; gap: 8px; margin-top: 30px; }
-    .progress-block { height: 8px; width: 60px; border-radius: 4px; background-color: #e9ecef; }
-    .progress-block.active { background-color: #0056b3; }
-    
-    .cta-button {
-        display: inline-block;
-        padding: 12px 30px;
+        padding: 15px;
         background-color: #0056b3;
         color: white;
-        border-radius: 8px;
-        text-decoration: none;
         font-weight: bold;
+        font-size: 1.2em;
+        margin-bottom: 20px;
+        border-radius: 0 0 15px 15px;
+    }
+
+    /* 모바일 전용 요금제 카드 스타일 (세로 나열 최적화) */
+    .mobile-card {
+        background: #fff;
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .mobile-card.featured {
+        border: 2px solid #0056b3;
+        background-color: #f8fbff;
+    }
+    .badge {
+        display: inline-block;
+        background: #0056b3;
+        color: white;
+        padding: 2px 10px;
+        border-radius: 4px;
+        font-size: 0.75em;
+        margin-bottom: 10px;
+    }
+    .card-title { font-size: 1.1em; font-weight: bold; color: #333; }
+    .card-price { font-size: 1.4em; font-weight: 800; color: #0056b3; margin: 5px 0; }
+    .card-features { font-size: 0.9em; color: #666; margin-top: 10px; line-height: 1.5; }
+
+    /* 블록형 프로그레스 바 */
+    .progress-container { display: flex; gap: 4px; margin: 15px 0; }
+    .progress-block { height: 6px; flex: 1; background: #e9ecef; border-radius: 2px; }
+    .progress-block.active { background: #0056b3; }
+    
+    /* 버튼 스타일 커스텀 */
+    .stButton > button {
         width: 100%;
+        border-radius: 8px;
+        height: 45px;
+        font-weight: bold;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# 페이지 세션 상태 관리
+# 페이지 상태 관리
 if 'step' not in st.session_state:
     st.session_state.step = 'landing'
 
-# 1 & 2. 랜딩페이지 및 서비스 소개
+# 1. 랜딩 페이지 (서비스 소개)
 if st.session_state.step == 'landing':
-    st.markdown("""
-        <div class="hero">
-            <h1 style='font-size: 3.5em; margin-bottom: 20px;'>NextWave</h1>
-            <p style='font-size: 1.3em; opacity: 0.9;'>일정관리, 협업메모, 스마트 알림을 하나로</p>
-            <p style='font-size: 1.1em; font-weight: bold; margin-top: 20px;'>이미 초기 직장인 가입자의 51.3%가 생산성 혁신을 경험 중입니다</p>
-        </div>
-    """, unsafe_allow_html=True)
+    st.markdown('<div class="app-bar">NextWave</div>', unsafe_allow_html=True)
+    st.image("https://via.placeholder.com/600x300.png?text=Smart+Productivity+for+Work", use_container_width=True)
     
-    st.container()
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.markdown("### 📅 스마트 일정\n복잡한 업무 우선순위를 AI가 대신 정리합니다.")
-    with col2:
-        st.markdown("### 📝 실시간 협업\n소규모 팀을 위한 끊김 없는 메모 공유 시스템.")
-    with col3:
-        st.markdown("### 🔔 칼퇴 알림\n마감 기한 압박 없는 스마트한 업무 알림.")
-
-    st.markdown("<br><br>", unsafe_allow_html=True)
-    if st.button("지금 바로 나에게 맞는 요금제 찾기 ➔", type="primary", use_container_width=True):
+    st.title("일과 삶의 파도를 넘는 방법")
+    st.write("직장인 78%가 경험한 업무 자동화 솔루션 [cite: 154]")
+    
+    with st.expander("✨ 주요 기능 보기"):
+        st.write("- **AI 일정 관리**: 우선순위 자동 배정 [cite: 96]")
+        st.write("- **협업 메모**: 팀원과 실시간 공유 [cite: 98]")
+        st.write("- **스마트 알림**: 칼퇴를 부르는 마감 관리 [cite: 154]")
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+    if st.button("내게 맞는 플랜 찾기"):
         st.session_state.step = 'pricing'
         st.rerun()
 
-# 3. 전략적 요금제 구성 (이탈률 최소화 설계)
+# 2. 요금제 페이지 (이탈률 최소화 전략 반영) [cite: 91, 112]
 elif st.session_state.step == 'pricing':
-    st.markdown("<h2 style='text-align: center; margin-bottom: 40px;'>합리적인 선택으로 업무 효율을 높이세요</h2>", unsafe_allow_html=True)
-    
-    # 전략적 요금제 3종 구성
-    st.markdown(f"""
-        <div class="pricing-container">
-            <div class="price-card">
-                <div class="price-title">Free</div>
-                <div class="price-val">0원 <small style='font-size: 0.4em; color: #999;'>/ 평생 무료</small></div>
-                <ul class="price-features">
-                    <li>개인 일정 관리 (기본)</li>
-                    <li>협업 메모 3개 생성</li>
-                    <li>기본 푸시 알림</li>
-                    <li><b>대학생 팀플 최적화</b></li>
-                </ul>
-            </div>
-            
-            <div class="price-card featured">
-                <div class="badge">직장인 78%가 선택한 플랜</div>
-                <div class="price-title">Starter Pro</div>
-                <div class="price-val">4,900원 <small style='font-size: 0.4em; color: #999;'>/ 월 (첫 달 무료)</small></div>
-                <ul class="price-features">
-                    <li><b>무제한</b> 협업 및 메모</li>
-                    <li><b>칼퇴 치트키</b> 실무 템플릿 제공</li>
-                    <li>전문가용 업무 자동화 알림</li>
-                    <li><b>첫 7일 무료 체험 (결제X)</b></li>
-                </ul>
-            </div>
-            
-            <div class="price-card">
-                <div class="price-title">Team Biz</div>
-                <div class="price-val">9,900원 <small style='font-size: 0.4em; color: #999;'>/ 인당 월</small></div>
-                <ul class="price-features">
-                    <li>조직 단위 권한 관리</li>
-                    <li>Bottom-up 협업 시스템</li>
-                    <li>B2B 전용 기술 지원</li>
-                    <li>대시보드 통합 관리</li>
-                </ul>
+    st.markdown('<div class="app-bar">요금제 선택</div>', unsafe_allow_html=True)
+    st.info("💡 모든 유료 플랜은 **7일 무료 체험**이 가능합니다. (결제 정보 불필요) [cite: 91]")
+
+    # 무료 플랜 (이탈 방지용) [cite: 162]
+    st.markdown("""
+        <div class="mobile-card">
+            <div class="card-title">Free (평생 무료)</div>
+            <div class="card-price">0원</div>
+            <div class="card-features">
+                • 개인 일정 관리 기본<br>
+                • 대학생 팀플 최적화 도구 [cite: 99]
             </div>
         </div>
     """, unsafe_allow_html=True)
-    
-    st.info("💡 **Starter Pro 플랜**은 현재 SNS 광고 유입 유저에게만 제공되는 한정 제휴 혜택입니다.")
-    
-    if st.button("🚀 Starter Pro 무료 체험 시작하기 (1분 소요)", type="primary", use_container_width=True):
+
+    # 직장인 타겟 제휴 플랜 (핵심 전략) [cite: 158]
+    st.markdown("""
+        <div class="mobile-card featured">
+            <div class="badge">추천: 직장인 51.3% 선택 [cite: 96]</div>
+            <div class="card-title">Starter Pro (제휴 혜택)</div>
+            <div class="card-price">4,900원 <span style='font-size:0.6em; color:#999;'>/월</span></div>
+            <div class="card-features">
+                • <b>무제한</b> 협업 및 자동화<br>
+                • <b>실무 자동화 템플릿</b> 즉시 제공 [cite: 159]<br>
+                • 첫 달 무료 체험 가능
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # 기업형 플랜 
+    st.markdown("""
+        <div class="mobile-card">
+            <div class="card-title">Team Biz</div>
+            <div class="card-price">9,900원 <span style='font-size:0.6em; color:#999;'>/인당</span></div>
+            <div class="card-features">
+                • 조직 단위 권한 및 보안<br>
+                • B2B 전용 통합 대시보드 
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
+    if st.button("Starter Pro 무료 체험 시작"):
         st.session_state.step = 'signup'
         st.rerun()
-    
-    st.markdown("<p style='text-align: center; color: #999; margin-top: 10px;'>카드 정보 입력 없이 3초 만에 시작하세요.</p>", unsafe_allow_html=True)
+    st.caption("체험 종료 전 알림을 드립니다. 위약금 걱정 없이 시작하세요. [cite: 91]")
 
-# 4 & 5. 회원가입 프로세스 (UX 붕괴 방지 UI)
+# 3. 회원가입 페이지 (UX 병목 해소) 
 elif st.session_state.step == 'signup':
-    st.markdown("<h2 style='text-align: center;'>거의 다 됐습니다! 딱 1분만 빌려주세요.</h2>", unsafe_allow_html=True)
+    st.markdown('<div class="app-bar">회원가입</div>', unsafe_allow_html=True)
     
-    # 블록형 프로그레스 바
+    # 블록형 프로그레스 바 (75% 지점 표시)
     st.markdown("""
         <div class="progress-container">
             <div class="progress-block active"></div>
@@ -171,36 +143,36 @@ elif st.session_state.step == 'signup':
             <div class="progress-block active"></div>
             <div class="progress-block"></div>
         </div>
-        <p style='text-align: center; color: #0056b3; font-weight: bold; margin-top: 10px;'>진행도: 75% (마지막 단계)</p>
+        <p style='text-align:right; font-size:0.8em; color:#0056b3; font-weight:bold;'>마지막 단계 (75%)</p>
     """, unsafe_allow_html=True)
-    
-    col1, col2 = st.columns([1, 1])
-    with col1:
-        st.markdown("### ⚡ 소셜 로그인으로 3초 만에 완료")
-        st.button("🚀 Google로 시작하기", use_container_width=True)
-        st.button("💬 Kakao로 시작하기", use_container_width=True)
-        st.button("🟢 Naver로 시작하기", use_container_width=True)
-    
-    with col2:
-        st.markdown("### 📧 NextWave 자체 계정")
-        with st.form("signup_form"):
-            st.text_input("업무용 이메일", placeholder="work@company.com")
-            st.text_input("비밀번호", type="password")
-            if st.form_submit_button("가입 완료 및 템플릿 받기"):
-                st.session_state.step = 'complete'
-                st.rerun()
 
-    st.success("💡 지금 가입하시면 **'옆자리 김대리도 몰래 쓰는 업무 자동화 템플릿'**을 즉시 메일로 발송해 드립니다.")
-
-# 가입 완료
-elif st.session_state.step == 'complete':
-    st.balloons()
     st.markdown("""
-        <div style='text-align: center; padding: 100px 20px;'>
-            <h1 style='color: #0056b3;'>🎉 가입을 환영합니다!</h1>
-            <p style='font-size: 1.5em; margin: 20px 0;'>오늘부터 당신의 퇴근 시간이 20% 빨라집니다.</p>
-            <p>입력하신 이메일로 <b>무료 체험 가이드</b>와 <b>실무 템플릿</b>을 전송했습니다.</p>
-            <br><br>
-            <a href='#' style='padding: 15px 40px; background: #0056b3; color: white; border-radius: 8px; text-decoration: none; font-weight: bold;'>서비스 대시보드로 이동</a>
+        <div style='text-align:center; padding: 10px 0;'>
+            <h4 style='color:#0056b3;'>"오늘부터 <b>칼퇴</b>하세요." [cite: 186]</h4>
+            <p style='font-size:0.85em; color:#666;'>1분 만에 가입하고 실무 템플릿을 받으세요.</p>
         </div>
     """, unsafe_allow_html=True)
+
+    # 소셜 가입 버튼 (이탈 방지 핵심) [cite: 204]
+    st.button("🚀 Google로 시작하기")
+    st.button("💬 Kakao로 시작하기")
+    st.button("🟢 Naver로 시작하기")
+    
+    st.markdown("<p style='text-align:center; color:#ccc; margin:10px 0;'>또는</p>", unsafe_allow_html=True)
+
+    with st.form("signup_form"):
+        st.text_input("업무용 이메일", placeholder="work@company.com")
+        st.text_input("비밀번호", type="password")
+        if st.form_submit_button("가입 완료 및 혜택 받기"):
+            st.session_state.step = 'complete'
+            st.rerun()
+
+# 4. 완료 페이지
+elif st.session_state.step == 'complete':
+    st.balloons()
+    st.markdown('<div class="app-bar">가입 완료</div>', unsafe_allow_html=True)
+    st.success("반갑습니다! 당신의 워크플로우가 이제 바뀝니다.")
+    st.write("메일함으로 보낸 **'실무 템플릿'**을 지금 확인해 보세요. [cite: 159]")
+    if st.button("홈으로 이동"):
+        st.session_state.step = 'landing'
+        st.rerun()
