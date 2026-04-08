@@ -1,99 +1,148 @@
 import streamlit as st
 
-# 모바일 화면처럼 보이기 위한 CSS 설정
-st.set_page_config(page_title="NextWave Mobile B-Test", layout="centered")
+# 페이지 설정
+st.set_page_config(page_title="NextWave Mobile UX Prototype", layout="centered")
 
+# 스마트폰 프레임 및 모바일 UI 스타일링
 st.markdown("""
     <style>
-    /* 모바일 프레임 느낌의 컨테이너 */
-    .mobile-container {
-        max-width: 375px;
+    /* 스마트폰 외부 베젤 */
+    .iphone-frame {
+        width: 360px;
+        height: 740px;
         margin: auto;
-        border: 8px solid #333;
-        border-radius: 30px;
-        padding: 20px;
+        border: 12px solid #222;
+        border-radius: 45px;
+        padding: 15px;
         background-color: white;
-        height: 667px;
-        overflow-y: auto;
-        font-family: 'Pretendard', sans-serif;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
     }
+    
+    /* 상단 스피커 구멍 */
+    .iphone-frame::before {
+        content: "";
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 5px;
+        background-color: #333;
+        border-radius: 10px;
+    }
+
+    /* 상단 상태바 */
+    .status-bar {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 5px 10px;
+        margin-bottom: 20px;
+    }
+
+    /* 실험군 B 핵심 요소: 프로그레스 바 */
+    .progress-section {
+        margin-top: 30px;
+        text-align: center;
+    }
+    
+    .main-copy {
+        font-size: 22px;
+        font-weight: 800;
+        line-height: 1.4;
+        margin: 30px 0 10px 0;
+        text-align: center;
+        color: #1a4a7c;
+    }
+    
+    .sub-copy {
+        font-size: 14px;
+        color: #666;
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    /* 소셜 로그인 버튼 스타일 */
     .stButton>button {
+        width: 100%;
+        height: 55px;
         border-radius: 12px;
-        height: 3.5em;
         font-weight: bold;
         font-size: 16px;
+        margin-bottom: 12px;
+        transition: 0.3s;
     }
-    .kakao-btn { background-color: #FEE500 !important; color: #000 !important; border: none !important; }
-    .google-btn { background-color: #ffffff !important; color: #000 !important; border: 1px solid #ddd !important; }
-    .highlight-box {
-        background-color: #f0f7ff;
-        border-radius: 15px;
-        padding: 15px;
-        margin: 15px 0;
-        border-left: 5px solid #1a4a7c;
+    
+    .kakao-btn button {
+        background-color: #FEE500 !important;
+        color: #3c1e1e !important;
+        border: none !important;
+    }
+    
+    .google-btn button {
+        background-color: white !important;
+        color: #555 !important;
+        border: 1px solid #ddd !important;
     }
     </style>
     """, unsafe_allow_html=True)
 
-st.title("📱 모바일 실험군(B) UI")
-st.write("각 탭을 클릭하여 실험군 B의 모바일 화면을 확인하세요.")
+# 스마트폰 화면 시작
+st.markdown('<div class="iphone-frame">', unsafe_allow_html=True)
 
-tab1, tab2, tab3 = st.tabs(["가입 UX", "실무 메시지", "요금제 혜택"])
-
-# --- Test 1. 가입 프로세스 B안 (하단 퍼널) ---
-with tab1:
-    st.markdown("### Test 1. 간소화된 가입 프로세스")
-    st.markdown('<div class="mobile-container">', unsafe_allow_html=True)
-    st.info("💡 **가입 완료까지 10초 남았습니다**")
-    st.progress(85)
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.subheader("커피 한 모금 마시는 사이 가입 끝! ☕")
-    st.write("소중한 시간을 10초도 뺏지 않겠습니다.")
-    
-    st.button("🟡 카카오로 1초 만에 시작하기")
-    st.button("⚪ 구글로 계속하기")
-    
-    st.markdown("<br><center>또는</center><br>", unsafe_allow_html=True)
-    st.text_input("이메일로 계속하기", placeholder="email@address.com")
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# --- Test 2. 초기 직장인 메시지 B안 (중단 퍼널) ---
-with tab2:
-    st.markdown("### Test 2. 주니어 맞춤형 베네핏")
-    st.markdown('<div class="mobile-container">', unsafe_allow_html=True)
-    st.write("🌊 **NextWave**")
-    st.header("사수 도움 없이도 칭찬받는 '실무 치트키'")
-    
-    st.markdown('''
-    <div class="highlight-box">
-        <b>✅ 신입 사원 1,400명이 선택</b><br>
-        이미 업무 적응 시간을 절반으로 줄였습니다.
+# 1. 상태바
+st.markdown("""
+    <div class="status-bar">
+        <span>9:41</span>
+        <span>📶 🔋</span>
     </div>
-    ''', unsafe_allow_html=True)
-    
-    st.success("🎁 [신규 한정] 실무 템플릿 패키지 증정")
-    st.write("연봉 협상 시트부터 기획서 양식까지 한 번에!")
-    
-    st.button("🚀 무료로 템플릿 받고 시작하기")
-    st.markdown('</div>', unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
-# --- Test 3. 가격 저항 제거 B안 (상단 퍼널) ---
-with tab3:
-    st.markdown("### Test 3. 결제 부담 제로 오퍼")
-    st.markdown('<div class="mobile-container">', unsafe_allow_html=True)
-    st.write("🌊 **NextWave Premium**")
-    st.subheader("커피 2잔 가격으로 얻는<br>매일 1시간의 여유 ☕", unsafe_allow_html=True)
-    
-    st.markdown('''
-    <div style="text-align: center; margin: 20px 0;">
-        <h1 style="color: #1a4a7c; margin-bottom: 0;">0원</h1>
-        <p style="color: #666;">14일 무료 체험</p>
+# 2. 프로그레스 바 (Test 1 핵심 요소)
+st.markdown('<div class="progress-section">', unsafe_allow_html=True)
+st.progress(85) # 85% 완료 상태 시각화
+st.caption("가입 완료까지 단 10초 남았습니다! (85%)")
+st.markdown('</div>', unsafe_allow_html=True)
+
+# 3. 메인 카피 (Test 1 문구 반영)
+st.markdown("""
+    <div class="main-copy">
+        커피 한 모금 마시는 사이<br>가입 끝! ☕
     </div>
-    ''', unsafe_allow_html=True)
-    
-    st.warning("✅ **카드 등록 없이 바로 시작하세요**")
-    st.markdown("**[제휴사 추천 전용 혜택]**<br>실무 템플릿 패키지 즉시 증정", unsafe_allow_html=True)
-    
-    st.button("💎 부담 없이 체험 시작하기")
-    st.caption("<center>체험 종료 전 알림을 보내드려요</center>", unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    <div class="sub-copy">
+        당신의 소중한 시간을<br>10초도 뺏지 않겠습니다.
+    </div>
+    """, unsafe_allow_html=True)
+
+# 4. 소셜 로그인 버튼 (Test 1 최상단 배치 전략)
+st.markdown('<div class="kakao-btn">', unsafe_allow_html=True)
+if st.button("🟡 카카오로 1초 만에 시작하기"):
+    st.balloons()
+st.markdown('</div>', unsafe_allow_html=True)
+
+st.markdown('<div class="google-btn">', unsafe_allow_html=True)
+st.button("⚪ 구글로 계속하기")
+st.markdown('</div>', unsafe_allow_html=True)
+
+st.markdown("<br><center style='color:#999; font-size:12px;'>또는</center><br>", unsafe_allow_html=True)
+
+# 5. 기존 이메일 가입 (하단으로 밀어냄)
+st.text_input("이메일 주소", placeholder="example@nextwave.com")
+st.caption("※ 별도의 인증 없이 즉시 시작 가능합니다.")
+
+st.markdown('</div>', unsafe_allow_html=True) # 스마트폰 화면 끝
+
+# 사이드바 설명
+st.sidebar.title("실험군 B 설계 포인트")
+st.sidebar.markdown(f"""
+- **목표:** 최종 이탈률 71.9% 방어
+- **핵심 장치:**
+    1. **프로그레스 바:** 잔여 단계를 직관적으로 제시 
+    2. **소셜 로그인:** 최상단 배치를 통한 인증 절차 간소화 
+    3. **마이크로 카피:** '10초', '커피 한 모금' 등 인지적 저항 감소 
+""")
