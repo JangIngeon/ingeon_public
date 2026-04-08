@@ -1,210 +1,154 @@
 import streamlit as st
 
-# 페이지 설정 (중앙 정렬)
-st.set_page_config(page_title="NextWave 리얼 모바일 프로토타입", layout="centered")
+# 페이지 설정
+st.set_page_config(page_title="NextWave UI Strategy Mockup", layout="wide")
 
-# --- CSS 스타일링 (스마트폰 프레임 및 내부 UI) ---
+# CSS: PC 배경과 스마트폰 프레임, 그리고 기획 문구 스타일링
 st.markdown("""
     <style>
-    /* 전체 배경을 어둡게 하여 스마트폰을 강조 */
+    /* 전체 배경: 세련된 다크 그레이 */
     .stApp {
-        background-color: #2b2b2b;
+        background-color: #f0f2f6;
     }
 
-    /* 스마트폰 외부 베젤 (아이폰 느낌) */
-    .iphone-frame {
-        width: 360px;
-        height: 760px;
-        margin: 40px auto;
-        border: 14px solid #111; /* 두꺼운 베젤 */
-        border-radius: 50px;
-        padding: 10px;
-        background-color: black;
-        box-shadow: 0 30px 60px rgba(0,0,0,0.8);
-        position: relative;
-        overflow: hidden; /* 영역 밖 내용 숨김 */
+    /* 메인 컨테이너 레이아웃 */
+    .main-container {
         display: flex;
-        flex-direction: column;
-    }
-    
-    /* 상단 노치 (스피커 및 카메라 부위) */
-    .iphone-frame::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 150px;
-        height: 25px;
-        background-color: #111;
-        border-bottom-left-radius: 15px;
-        border-bottom-right-radius: 15px;
-        z-index: 10;
+        justify-content: space-around;
+        align-items: flex-start;
+        padding: 50px;
+        gap: 50px;
     }
 
-    /* 스마트폰 내부 화면 영역 (실제 대조군/실험군 UI가 그려지는 곳) */
+    /* 왼쪽: 기획 전략 카드 (PC 화면 느낌) */
+    .strategy-card {
+        flex: 1;
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        border-left: 8px solid #1a4a7c;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    }
+
+    /* 오른쪽: 스마트폰 프레임 */
+    .phone-mockup {
+        width: 360px;
+        height: 740px;
+        background: #111;
+        border-radius: 50px;
+        padding: 12px;
+        box-shadow: 0 40px 100px rgba(0,0,0,0.3);
+        position: relative;
+        border: 4px solid #444;
+    }
+
     .phone-screen {
         width: 100%;
         height: 100%;
-        background-color: white; /* 화면 백그라운드 */
-        border-radius: 35px;
-        overflow-y: auto; /* 세로 스크롤 가능 */
+        background: white;
+        border-radius: 38px;
+        overflow: hidden;
         display: flex;
         flex-direction: column;
-        padding: 20px;
         font-family: 'Pretendard', sans-serif;
     }
 
-    /* 상단 상태바 */
-    .status-bar {
-        display: flex;
-        justify-content: space-between;
-        font-size: 12px;
-        font-weight: bold;
-        color: black;
-        padding: 5px 15px 0 15px;
-        margin-bottom: 20px;
-        z-index: 5; /* 노치보다 아래 */
-    }
+    /* 스마트폰 내부 UI 요소 */
+    .status-bar { padding: 15px 25px 5px; display: flex; justify-content: space-between; font-size: 12px; font-weight: bold; }
+    .progress-bar-container { padding: 20px 25px 10px; }
+    .progress-text { font-size: 11px; color: #1a4a7c; font-weight: bold; margin-bottom: 5px; display: block; }
+    
+    .ui-content { padding: 30px 25px; text-align: center; }
+    .main-copy { font-size: 22px; font-weight: 800; color: #1a4a7c; line-height: 1.4; margin-bottom: 12px; }
+    .sub-copy { font-size: 13px; color: #666; line-height: 1.5; margin-bottom: 35px; }
 
-    /* --- 내부 UI 요소 스타일 (B 실험군) --- */
-    
-    /* 프로그레스 바 섹션 */
-    .progress-section {
-        margin-top: 10px;
-        text-align: center;
-    }
-    .progress-text {
-        font-size: 12px;
-        color: #666;
-        margin-top: 5px;
-    }
-    
-    /* 메인 카피 */
-    .main-copy {
-        font-size: 20px;
-        font-weight: 800;
-        line-height: 1.4;
-        margin: 35px 0 10px 0;
-        text-align: center;
-        color: #1a4a7c;
-    }
-    
-    /* 서브 카피 */
-    .sub-copy {
-        font-size: 13px;
-        color: #555;
-        text-align: center;
-        margin-bottom: 35px;
-        line-height: 1.5;
-    }
-
-    /* 소셜 로그인 버튼 공통 스타일 */
+    /* 버튼 스타일 */
     .stButton>button {
-        width: 100%;
-        height: 52px;
-        border-radius: 12px;
-        font-weight: 700;
-        font-size: 15px;
-        margin-bottom: 12px;
-        border: none;
-        transition: transform 0.1s;
+        width: 100%; height: 55px; border-radius: 12px; font-weight: bold; border: none; margin-bottom: 12px;
     }
-    
-    .stButton>button:active {
-        transform: scale(0.98);
-    }
-    
-    /* 카카오 버튼 (B안 핵심) */
-    .kakao-btn button {
-        background-color: #FEE500 !important;
-        color: #3c1e1e !important;
-    }
-    
-    /* 구글 버튼 */
-    .google-btn button {
-        background-color: white !important;
-        color: #333 !important;
-        border: 1px solid #ddd !important;
-    }
-    
-    /* 하단 이메일 입력 영역 */
-    .email-section {
-        margin-top: 15px;
-        border-top: 1px solid #eee;
-        padding-top: 20px;
-    }
+    .kakao-btn button { background-color: #FEE500 !important; color: #3c1e1e !important; }
+    .google-btn button { background-color: white !important; color: #333 !important; border: 1px solid #ddd !important; }
+
+    /* 하이라이트 효과 */
+    .highlight { background-color: #fff3cd; font-weight: bold; padding: 2px 5px; border-radius: 4px; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 스마트폰 프로토타입 구현 ---
+# 화면 구성
+col1, col2 = st.columns([1, 1])
 
-st.write("<br>", unsafe_allow_html=True) # 상단 여백
-
-# 폰 베젤 시작
-st.markdown('<div class="iphone-frame">', unsafe_allow_html=True)
-
-# 폰 화면 시작
-st.markdown('<div class="phone-screen">', unsafe_allow_html=True)
-
-# 1. 상단 상태바
-st.markdown("""
-    <div class="status-bar">
-        <span>9:41</span>
-        <span>📶 🔋</span>
+with col1:
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown("""
+    <div class="strategy-card">
+        <h2 style='color: #1a4a7c; margin-bottom: 25px;'>📋 Test 1. UI 설계 전략</h2>
+        <p style='font-size: 18px; line-height: 1.8; color: #444;'>
+            "현재 가입 프로세스의 복잡도를 해결하기 위해 
+            <span class="highlight">가입 절차를 최대한 간소화</span>한 방식을 적용한다.<br><br>
+            <span class="highlight">구글·카카오 소셜 로그인 버튼을 최상단에 배치</span>하고, 
+            실시간 <span class="highlight">프로그레스 바로 잔여 단계</span>를 직관적으로 제시하며,<br><br>
+            <b>'커피 한 모금 마시는 사이 가입 끝. 당신의 소중한 시간을 10초도 뺏지 않겠습니다.'</b>라는 문구로 인지적 저항을 낮춘다."
+        </p>
+        <hr style='margin: 30px 0;'>
+        <p style='font-size: 14px; color: #888;'>
+            * 데이터 근거: 가입 단계 최종 이탈률 71.9% 방어 목적 [cite: 88, 34]
+        </p>
     </div>
     """, unsafe_allow_html=True)
 
-# 2. 프로그레스 바 Section (Test 1 B안 핵심 요소)
-st.markdown('<div class="progress-section">', unsafe_allow_html=True)
-# 85% 완료 상태 시각화
-st.progress(85) 
-st.markdown('<div class="progress-text">가입 완료까지 단 10초 남았습니다! (85%)</div>', unsafe_allow_html=True)
-st.markdown('</div>', unsafe_allow_html=True)
+with col2:
+    # 스마트폰 프레임 시작
+    st.markdown("""
+    <div class="phone-mockup">
+        <div class="phone-screen">
+            <div class="status-bar">
+                <span>9:41</span>
+                <span>📶 🔋</span>
+            </div>
+    """, unsafe_allow_html=True)
+    
+    # 내부 UI 구현
+    st.markdown('<div class="progress-bar-container">', unsafe_allow_html=True)
+    st.markdown('<span class="progress-text">가입 완료까지 단 10초 남았습니다! (85%)</span>', unsafe_allow_html=True)
+    st.progress(85)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-# 3. 메인 및 서브 카피 (인지적 저항 감소 문구 반영)
-st.markdown("""
-    <div class="main-copy">
-        커피 한 모금 마시는 사이<br>가입 끝! ☕
-    </div>
-    <div class="sub-copy">
-        당신의 소중한 시간을<br>10초도 뺏지 않겠습니다.
+    st.markdown("""
+    <div class="ui-content">
+        <div class="main-copy">커피 한 모금 마시는 사이<br>가입 끝! ☕</div>
+        <div class="sub-copy">당신의 소중한 시간을<br>10초도 뺏지 않겠습니다.</div>
     </div>
     """, unsafe_allow_html=True)
 
-# 4. 소셜 로그인 버튼 Section (인증 간소화 전략)
-st.markdown('<div class="kakao-btn">', unsafe_allow_html=True)
-if st.button("🟡 카카오로 1초 만에 시작하기"):
-    # 버튼 클릭 시 퍼포먼스 (간단한 상호작용)
-    st.balloons() 
-st.markdown('</div>', unsafe_allow_html=True)
+    # 버튼 영역
+    col_k, col_g = st.columns(1)
+    with col_k:
+        st.markdown('<div class="kakao-btn">', unsafe_allow_html=True)
+        if st.button("🟡 카카오로 1초 만에 시작하기"):
+            st.balloons()
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    with col_g:
+        st.markdown('<div class="google-btn">', unsafe_allow_html=True)
+        st.button("⚪ 구글로 계속하기")
+        st.markdown('</div>', unsafe_allow_html=True)
 
-st.markdown('<div class="google-btn">', unsafe_allow_html=True)
-st.button("⚪ 구글로 계속하기")
-st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown("""
+            <div style="text-align:center; color:#bbb; font-size:12px; margin-top:15px;">또는</div>
+            <div style="padding: 20px 25px;">
+                <div style="font-size:12px; color:#333; margin-bottom:5px;">이메일 주소</div>
+                <div style="background:#f4f4f4; height:45px; border-radius:8px; border:1px solid #eee; padding:12px; color:#aaa; font-size:13px;">
+                    example@nextwave.com
+                </div>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
-# 구분선 (또는)
-st.markdown("<center style='color:#bbb; font-size:12px; margin: 15px 0;'>또는</center>", unsafe_allow_html=True)
-
-# 5. 기존 이메일 가입 영역 (하단 배치)
-st.markdown('<div class="email-section">', unsafe_allow_html=True)
-# 입력 폼 스타일 폰트 크기 조정
-st.markdown("<div style='font-size:14px; font-weight:600; color:#333; margin-bottom:8px;'>이메일 주소</div>", unsafe_allow_html=True)
-st.text_input("email_input", label_visibility="collapsed", placeholder="example@nextwave.com")
-st.markdown("<div style='font-size:11px; color:#888; margin-top:5px;'>※ 별도의 인증 없이 즉시 시작 가능합니다.</div>", unsafe_allow_html=True)
-st.markdown('</div>', unsafe_allow_html=True)
-
-st.markdown('</div>', unsafe_allow_html=True) # 폰 화면 끝
-
-st.markdown('</div>', unsafe_allow_html=True) # 폰 베젤 끝
-
-# --- 담당자 설득을 위한 사이드바 설명 ---
-st.sidebar.title("📱 Test 1 실험군(B) 모바일 UI")
-st.sidebar.markdown(f"""
-이 퍼널 단계의 <span style='color:#d9534f; font-weight:bold;'>최종 이탈률 71.9%</span>를 방어하기 위한 모바일 최적화 UI안입니다.
-
-**설계 포인트:**
-1. **프로그레스 바:** '가입이 거의 끝나간다'는 심리적 안도감 제공 (85% 시각화)
-2. **소셜 로그인 최상단 배치:** 인증 단계를 생략하여 즉시 가입 유도
-3. **마이크로 카피:** '10초', '커피 한 모금' 등 시간 단축 메시지로 인지적 저항 최소화
-""", unsafe_allow_html=True)
+# 실행 가이드
+st.sidebar.title("시연 가이드")
+st.sidebar.info("""
+1. 왼쪽 카드: 기획서의 핵심 전략 텍스트입니다. 
+2. 오른쪽 스마트폰: 해당 전략이 실제 UI로 구현된 모습입니다.
+3. 카카오 버튼을 클릭하면 실제 가입이 완료되는 듯한 상호작용(풍선)이 발생합니다.
+""")
