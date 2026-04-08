@@ -1,22 +1,22 @@
 import streamlit as st
 
-st.set_page_config(page_title="가입 UI", layout="wide")
+st.set_page_config(page_title="가입 UX 데모", layout="wide")
 
-# 전체 스타일
+# 스타일
 st.markdown("""
 <style>
 
-/* PC 화면 (브라우저 프레임 느낌) */
+/* PC 프레임 */
 .pc-frame {
-    width: 900px;
-    margin: 50px auto;
+    width: 1000px;
+    margin: 40px auto;
     padding: 20px;
     border-radius: 16px;
     background-color: #f1f3f5;
     box-shadow: 0px 10px 30px rgba(0,0,0,0.2);
 }
 
-/* 상단 브라우저 바 */
+/* 브라우저 상단 */
 .browser-bar {
     display: flex;
     align-items: center;
@@ -37,10 +37,15 @@ st.markdown("""
 .yellow { background-color: #ffbd2e; }
 .green { background-color: #27c93f; }
 
-/* 모바일 카드 */
-.mobile-container {
+/* 내부 레이아웃 */
+.content {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* 모바일 UI */
+.mobile {
     width: 360px;
-    margin: auto;
     padding: 25px;
     border-radius: 25px;
     background-color: white;
@@ -70,7 +75,6 @@ st.markdown("""
     border-radius: 10px;
     font-weight: bold;
     text-align: center;
-    text-decoration: none;
 }
 
 .google {
@@ -81,6 +85,22 @@ st.markdown("""
 .kakao {
     background-color: #FEE500;
     color: black;
+}
+
+/* 기획 설명 */
+.idea-box {
+    width: 500px;
+    padding: 20px;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: 0px 5px 20px rgba(0,0,0,0.1);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.idea-title {
+    font-weight: bold;
+    margin-bottom: 10px;
 }
 
 </style>
@@ -99,8 +119,11 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# 모바일 UI
-st.markdown('<div class="mobile-container">', unsafe_allow_html=True)
+# 내부 컨텐츠
+st.markdown('<div class="content">', unsafe_allow_html=True)
+
+# ✅ 왼쪽: 모바일 UI
+st.markdown('<div class="mobile">', unsafe_allow_html=True)
 
 st.markdown('<div class="title">간편 가입</div>', unsafe_allow_html=True)
 
@@ -112,12 +135,31 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# 프로그레스 바
 st.progress(0.33, text="가입 단계 1/3")
 
-# 로그인 버튼
 st.markdown('<div class="btn google">Google로 시작하기</div>', unsafe_allow_html=True)
 st.markdown('<div class="btn kakao">카카오로 시작하기</div>', unsafe_allow_html=True)
 
-st.markdown('</div>', unsafe_allow_html=True)  # 모바일 끝
-st.markdown('</div>', unsafe_allow_html=True)  # PC 끝
+st.markdown('</div>', unsafe_allow_html=True)
+
+# ✅ 오른쪽: 기획 문구 그대로 출력
+st.markdown("""
+<div class="idea-box">
+<div class="idea-title">📌 가입 UX 설계 전략</div>
+
+가입 절차를 최대한 간소화한 방식을 적용한다.<br><br>
+
+구글·카카오 소셜 로그인 버튼을 최상단에 배치하고,<br>
+실시간 프로그레스 바로 잔여 단계를 직관적으로 제시하며,<br><br>
+
+<strong>
+"커피 한 모금 마시는 사이 가입 끝.  
+당신의 소중한 시간을 10초도 뺏지 않겠습니다."
+</strong><br><br>
+
+라는 문구로 인지적 저항을 낮춘다.
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown('</div>', unsafe_allow_html=True)  # content 끝
+st.markdown('</div>', unsafe_allow_html=True)  # pc-frame 끝
