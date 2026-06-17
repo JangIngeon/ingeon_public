@@ -25,6 +25,125 @@ RED = "#DC2626"
 BODY_PARTS = ["없음", "발목", "무릎", "햄스트링", "허벅지", "종아리", "허리", "어깨", "손목"]
 POSITIONS = ["GK", "DF", "MF", "FW"]
 
+# ----------------------------------------------------------------------
+# 3D 인체 모형 (스켈레톤) 좌표 — Body Ready 통증 부위 시각화용
+# ----------------------------------------------------------------------
+BODY_POINTS = {
+    "head": (0, 0, 9.3, 24),
+    "neck": (0, 0, 8.5, 10),
+    "chest": (0, 0, 7.2, 20),
+    "shoulder_L": (-1.3, 0.0, 7.9, 14),
+    "shoulder_R": (1.3, 0.0, 7.9, 14),
+    "elbow_L": (-1.7, 0.3, 6.2, 10),
+    "elbow_R": (1.7, 0.3, 6.2, 10),
+    "wrist_L": (-1.9, 0.5, 4.5, 11),
+    "wrist_R": (1.9, 0.5, 4.5, 11),
+    "waist": (0, 0, 5.5, 18),
+    "hip_L": (-0.6, 0, 5.0, 12),
+    "hip_R": (0.6, 0, 5.0, 12),
+    "thigh_L": (-0.6, 0, 3.4, 13),
+    "thigh_R": (0.6, 0, 3.4, 13),
+    "hamstring_L": (-0.6, 0.55, 2.8, 12),
+    "hamstring_R": (0.6, 0.55, 2.8, 12),
+    "knee_L": (-0.6, 0, 1.9, 10),
+    "knee_R": (0.6, 0, 1.9, 10),
+    "calf_L": (-0.6, 0, 1.0, 11),
+    "calf_R": (0.6, 0, 1.0, 11),
+    "ankle_L": (-0.6, 0, 0.2, 9),
+    "ankle_R": (0.6, 0, 0.2, 9),
+}
+
+BODY_EDGES = [
+    ("head", "neck"), ("neck", "chest"),
+    ("chest", "shoulder_L"), ("chest", "shoulder_R"),
+    ("shoulder_L", "elbow_L"), ("elbow_L", "wrist_L"),
+    ("shoulder_R", "elbow_R"), ("elbow_R", "wrist_R"),
+    ("chest", "waist"), ("waist", "hip_L"), ("waist", "hip_R"),
+    ("hip_L", "thigh_L"), ("thigh_L", "hamstring_L"), ("hamstring_L", "knee_L"),
+    ("knee_L", "calf_L"), ("calf_L", "ankle_L"),
+    ("hip_R", "thigh_R"), ("thigh_R", "hamstring_R"), ("hamstring_R", "knee_R"),
+    ("knee_R", "calf_R"), ("calf_R", "ankle_R"),
+]
+
+PART_TO_NODES = {
+    "어깨": ["shoulder_L", "shoulder_R"],
+    "손목": ["wrist_L", "wrist_R"],
+    "허리": ["waist"],
+    "허벅지": ["thigh_L", "thigh_R"],
+    "햄스트링": ["hamstring_L", "hamstring_R"],
+    "무릎": ["knee_L", "knee_R"],
+    "종아리": ["calf_L", "calf_R"],
+    "발목": ["ankle_L", "ankle_R"],
+}
+
+NODE_LABELS_KR = {
+    "head": "머리", "neck": "목", "chest": "가슴",
+    "shoulder_L": "어깨(좌)", "shoulder_R": "어깨(우)",
+    "elbow_L": "팔꿈치(좌)", "elbow_R": "팔꿈치(우)",
+    "wrist_L": "손목(좌)", "wrist_R": "손목(우)",
+    "waist": "허리", "hip_L": "골반(좌)", "hip_R": "골반(우)",
+    "thigh_L": "허벅지(좌)", "thigh_R": "허벅지(우)",
+    "hamstring_L": "햄스트링(좌)", "hamstring_R": "햄스트링(우)",
+    "knee_L": "무릎(좌)", "knee_R": "무릎(우)",
+    "calf_L": "종아리(좌)", "calf_R": "종아리(우)",
+    "ankle_L": "발목(좌)", "ankle_R": "발목(우)",
+}
+
+
+def build_body_figure(pain_area, pain_level=0):
+    """선택된 통증 부위를 강조한 3D 인체 스켈레톤 모형을 생성한다."""
+    highlighted = set(PART_TO_NODES.get(pain_area, []))
+
+    # 뼈대(연결선)
+    edge_x, edge_y, edge_z = [], [], []
+    for a, b in BODY_EDGES:
+        xa, ya, za, _ = BODY_POINTS[a]
+        xb, yb, zb, _ = BODY_POINTS[b]
+        edge_x += [xa, xb, None]
+        edge_y += [ya, yb, None]
+        edge_z += [za, zb, None]
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter3d(
+        x=edge_x, y=edge_y, z=edge_z, mode="lines",
+        line=dict(color="#9CA3AF", width=14),
+        hoverinfo="skip", showlegend=False,
+    ))
+
+    # 관절/부위 마커
+    node_names = list(BODY_POINTS.keys())
+    xs = [BODY_POINTS[n][0] for n in node_names]
+    ys = [BODY_POINTS[n][1] for n in node_names]
+    zs = [BODY_POINTS[n][2] for n in node_names]
+    sizes = [BODY_POINTS[n][3] + (6 if n in highlighted else 0) for n in node_names]
+    colors = [RED if n in highlighted else "#E5E7EB" for n in node_names]
+    line_colors = [RED if n in highlighted else "#9CA3AF" for n in node_names]
+    hover_text = [
+        f"{NODE_LABELS_KR[n]}" + (f" · 통증 강도 {pain_level}/10" if n in highlighted else "")
+        for n in node_names
+    ]
+
+    fig.add_trace(go.Scatter3d(
+        x=xs, y=ys, z=zs, mode="markers",
+        marker=dict(size=sizes, color=colors, line=dict(width=2, color=line_colors), opacity=0.95),
+        text=hover_text, hoverinfo="text", showlegend=False,
+    ))
+
+    fig.update_layout(
+        height=460,
+        margin=dict(l=0, r=0, t=10, b=0),
+        scene=dict(
+            xaxis=dict(visible=False, range=[-3, 3]),
+            yaxis=dict(visible=False, range=[-2, 2]),
+            zaxis=dict(visible=False, range=[-0.5, 10]),
+            aspectmode="manual",
+            aspectratio=dict(x=0.8, y=0.6, z=1.6),
+            camera=dict(eye=dict(x=1.6, y=1.6, z=0.7)),
+        ),
+        paper_bgcolor="rgba(0,0,0,0)",
+    )
+    return fig
+
 st.markdown(
     f"""
     <style>
@@ -290,28 +409,12 @@ with tab_body:
             st.success(f"제출 완료! {selected_name}님의 Readiness Score: **{new_score}점** ({risk_label(new_score)})")
 
     with col_b:
-        st.markdown("##### 신체 통증 부위 시각화 (간이)")
-        body_fig = go.Figure()
-        coords = {
-            "머리": (0, 9), "어깨": (0, 7.5), "허리": (0, 5.5),
-            "손목": (1.3, 6), "허벅지": (0, 3.5), "무릎": (0, 2),
-            "종아리": (0, 1), "발목": (0, 0.2), "햄스트링": (0.4, 3),
-        }
-        xs, ys, labels, colors = [], [], [], []
-        for part, (x, y) in coords.items():
-            xs.append(x); ys.append(y); labels.append(part)
-            colors.append(RED if part == pain_area else "#D1D5DB")
-        body_fig.add_trace(go.Scatter(
-            x=xs, y=ys, mode="markers+text", text=labels, textposition="middle right",
-            marker=dict(size=26, color=colors, line=dict(width=1, color="#888")),
-        ))
-        body_fig.update_layout(
-            height=420, showlegend=False, margin=dict(l=10, r=10, t=10, b=10),
-            xaxis=dict(visible=False, range=[-2, 3]), yaxis=dict(visible=False, range=[-1, 10]),
-        )
+        st.markdown("##### 3D 신체 모형 — 통증 부위 표시")
+        st.caption("마우스로 드래그하면 모형을 자유롭게 회전·확대할 수 있습니다.")
+        body_fig = build_body_figure(pain_area, pain_level)
         st.plotly_chart(body_fig, use_container_width=True)
         if pain_area != "없음":
-            st.warning(f"선택된 통증 부위: **{pain_area}** (강도 {pain_level}/10)")
+            st.warning(f"선택된 통증 부위: **{pain_area}** (강도 {pain_level}/10) — 모형에서 빨간색으로 표시됩니다.")
         else:
             st.info("현재 기록된 통증 부위가 없습니다.")
 
