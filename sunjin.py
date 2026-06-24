@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import koreanize_matplotlib
 
-st.set_page_config(page_title="동적 GPU 경제성 대시보드", layout="wide")
+st.set_page_config(page_title="대시보드", layout="wide")
 
 st.title("동적 GPU 경제성 대시보드")
-st.markdown("표를 직접 클릭하여 **값을 수정**하거나, 하단의 표 끝부분을 클릭해 **새로운 지표(행)**를 추가해 보세요. 열(모델) 추가 버튼을 통해서도 확장이 가능합니다.")
+st.markdown("표를 직접 클릭하여 값을 수정하거나, 하단의 표 끝부분을 클릭해 새로운 지표(행)를 추가해 보세요. 열(모델) 추가 버튼을 통해서도 확장이 가능합니다.")
 
 # 1. 초기 데이터 세팅 (세션 상태 활용하여 초기화 방지)
 if 'df' not in st.session_state:
